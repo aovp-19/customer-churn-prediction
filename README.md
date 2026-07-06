@@ -43,7 +43,7 @@ The tuned Random Forest (`max_depth=10`, `min_samples_leaf=5`, `n_estimators=200
 
 ## 📓 Notebook
 
-The full analysis, including data-driven interpretations and business-oriented conclusions at each step, is available in [`customer_churn_prediction.ipynb`](./customer_churn_prediction.ipynb).
+The full analysis, including data-driven interpretations and business-oriented conclusions at each step, is available in [`customer_churn_prediction.ipynb`](./Predicción_de_Churn_de_Clientes.ipynb).
 
 ## 🚧 Status
 
