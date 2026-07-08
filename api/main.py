@@ -3,7 +3,6 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 model = joblib.load("model/churn_model.pkl")
@@ -40,9 +39,6 @@ class ClienteInput(BaseModel):
     MonthlyCharges: float
     TotalCharges: float
 
-@app.get("/")
-def read_root():
-    return RedirectResponse(url="/")
 
 @app.post("/predict")
 def predict_churn(cliente: ClienteInput):
