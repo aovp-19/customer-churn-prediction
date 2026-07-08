@@ -42,7 +42,7 @@ class ClienteInput(BaseModel):
 
 @app.get("/")
 def read_root():
-    return RedirectResponse(url="/index.html")
+    return RedirectResponse(url="/")
 
 @app.post("/predict")
 def predict_churn(cliente: ClienteInput):
