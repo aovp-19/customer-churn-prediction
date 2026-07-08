@@ -1,0 +1,17 @@
+
+services:
+  api:
+    build:
+      context: ./api          # Carpeta donde está el Dockerfile de la API
+    ports:
+      - "8000:8000"           # host:contenedor — accesible en http://127.0.0.1:8000
+    restart: unless-stopped   # Si el contenedor se cae, Docker lo reinicia solo
+
+  frontend:
+    build:
+      context: ./frontend     # Carpeta donde está el Dockerfile del frontend
+    ports:
+      - "80:80"               # accesible en http://localhost
+    depends_on:
+      - api                   # Espera a que el contenedor de la API arranque primero
+    restart: unless-stopped

@@ -71,5 +71,3 @@ def predict_churn(cliente: ClienteInput):
         "probabilidad_churn": round(float(probabilidad_churn), 4)
     }
 
-# Se monta al final para no tapar las rutas de arriba (/predict, /docs, etc.)
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
