@@ -13,7 +13,7 @@ app = FastAPI(title="Churn Prediction API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://customer-churn-prediction-frontend.onrender.com"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -39,6 +39,9 @@ class ClienteInput(BaseModel):
     MonthlyCharges: float
     TotalCharges: float
 
+@app.get("/")
+def read_root():
+    return {"status": "ok", "mensaje": "Churn Prediction API activa"}
 
 @app.post("/predict")
 def predict_churn(cliente: ClienteInput):

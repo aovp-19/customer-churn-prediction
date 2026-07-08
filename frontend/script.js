@@ -1,5 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/predict";
-
+const API_URL = "https://customer-churn-prediction-2h2t.onrender.com/predict";
 const form = document.getElementById("churnForm");
 const resultadoDiv = document.getElementById("resultado");
 const resultadoBadge = document.getElementById("resultadoBadge");
