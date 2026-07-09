@@ -1,28 +1,34 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
+
+# Carpeta donde vive este mismo archivo (app.py), sin importar el directorio
+# de trabajo desde el que Streamlit Cloud ejecute el proceso.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --- Configuración general de la página ---
 st.set_page_config(
     page_title="Dashboard de Churn",
-    layout="wide"                  # Usa todo el ancho de la pantalla, mejor para dashboards
+    page_icon="📊",
+    layout="wide"
 )
 
 # --- Carga de datos y modelo ---
 @st.cache_data
 def cargar_datos():
-    data = pd.read_csv("telco_churn_clean.csv")
+    ruta_csv = os.path.join(BASE_DIR, "telco_churn_clean.csv")
+    data = pd.read_csv(ruta_csv)
 
-    # Corrección defensiva: si Churn todavía viene como texto, se convierte.
     if data["Churn"].dtype == "object":
         data["Churn"] = data["Churn"].map({"Yes": 1, "No": 0})
 
     return data
 
-@st.cache_resource  # cache_resource es para objetos pesados como modelos, no datos
+@st.cache_resource
 def cargar_modelo():
-    model = joblib.load("model/churn_model.pkl")
-    columns = joblib.load("model/model_columns.pkl")
+    model = joblib.load(os.path.join(BASE_DIR, "model", "churn_model.pkl"))
+    columns = joblib.load(os.path.join(BASE_DIR, "model", "model_columns.pkl"))
     return model, columns
 
 df = cargar_datos()
@@ -35,29 +41,23 @@ st.title("📊 Dashboard de Predicción de Churn")
 # ==========================================================================
 st.sidebar.header("Filtros")
 
-# Filtro de tipo de contrato: usamos las columnas dummy ya existentes
-# (Contract_One year, Contract_Two year) para reconstruir la categoría
 contrato_opciones = ["Todos", "Month-to-month", "One year", "Two year"]
 contrato_sel = st.sidebar.selectbox("Tipo de contrato", contrato_opciones)
 
-# Filtro de servicio de internet
 internet_opciones = ["Todos", "DSL", "Fiber optic", "No"]
 internet_sel = st.sidebar.selectbox("Servicio de internet", internet_opciones)
 
-# Filtro de antigüedad (tenure), como rango deslizante
 tenure_min, tenure_max = st.sidebar.slider(
     "Antigüedad (meses)",
     min_value=int(df["tenure"].min()),
     max_value=int(df["tenure"].max()),
-    value=(int(df["tenure"].min()), int(df["tenure"].max()))  # rango completo por defecto
+    value=(int(df["tenure"].min()), int(df["tenure"].max()))
 )
 
-# --- Aplicamos los filtros al DataFrame ---
 df_filtrado = df.copy()
 
 if contrato_sel != "Todos":
     if contrato_sel == "Month-to-month":
-        # Es la categoría de referencia: ambas dummies de contrato en False
         df_filtrado = df_filtrado[
             (df_filtrado["Contract_One year"] == False) &
             (df_filtrado["Contract_Two year"] == False)
@@ -68,7 +68,6 @@ if contrato_sel != "Todos":
 
 if internet_sel != "Todos":
     if internet_sel == "DSL":
-        # Categoría de referencia de internet
         df_filtrado = df_filtrado[
             (df_filtrado["InternetService_Fiber optic"] == False) &
             (df_filtrado["InternetService_No"] == False)
@@ -84,7 +83,7 @@ df_filtrado = df_filtrado[
 # ==========================================================================
 # 9.1 KPIs PRINCIPALES
 # ==========================================================================
-col1, col2, col3 = st.columns(3)  # 3 tarjetas lado a lado
+col1, col2, col3 = st.columns(3)
 
 total_clientes = len(df_filtrado)
 tasa_churn = df_filtrado["Churn"].mean() * 100
