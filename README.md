@@ -25,8 +25,11 @@ Beyond modeling, the goal of this project is to demonstrate the complete data sc
 ## 🛠️ Tech Stack
 
 **Data & Modeling:** Python · Pandas · NumPy · Scikit-learn · Matplotlib · Seaborn
+
 **Backend & Deployment:** FastAPI · Docker · Docker Compose · Render
+
 **Dashboard:** Streamlit · Streamlit Community Cloud
+
 **Frontend:** HTML · CSS · JavaScript · Bootstrap 5
 
 ## 🏗️ Architecture
